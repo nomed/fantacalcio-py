@@ -33,7 +33,7 @@ def save_analysis_results(df, base_name, source_name):
             "generated_at": pd.Timestamp.now().isoformat(),
             "columns": list(df.columns)
         },
-        "players": df.fillna("").to_dict("records")
+        "players": df.where(pd.notnull(df), None).to_dict("records")
     }
 
     with open(json_path, 'w', encoding='utf-8') as f:

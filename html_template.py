@@ -15,7 +15,7 @@ def generate_html_output(df, source_name):
     Returns:
         str: Complete HTML page as a string
     """
-    html_content = df.to_html(index=False, classes='table table-striped table-hover', border=0)
+    html_content = df.to_html(index=False, classes=['table', 'table-striped', 'table-hover'], border=0)
     
     # Create a complete HTML page with styling
     full_html = f"""<!DOCTYPE html>
@@ -68,7 +68,7 @@ def generate_html_output(df, source_name):
             font-weight: 600;
             position: sticky;
             top: 0;
-            z-index: 10;
+            z-index: 100;
         }}
         td {{
             padding: 10px 8px;
