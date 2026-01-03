@@ -55,7 +55,13 @@ Lo script eseguirà tutti i passaggi (recupero, elaborazione, calcolo e salvatag
 
 ## Output
 
-Al termine dell'esecuzione, verranno creati dei file Excel nella directory `data/output`. 
+Al termine dell'esecuzione, verranno creati dei file nella directory `data/output` in **tre formati**:
+
+- **Excel (.xlsx)** - Formato tradizionale per l'analisi con fogli di calcolo
+- **JSON (.json)** - Formato strutturato per l'integrazione con altre applicazioni
+- **HTML (.html)** - Pagine web interattive e stilizzate, visualizzabili direttamente nel browser
+
+Per maggiori dettagli sui file di output, consultare [data/output/README.md](data/output/README.md). 
 
 ## WIP
 
