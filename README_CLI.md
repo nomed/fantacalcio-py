@@ -66,7 +66,7 @@ poetry run python cli.py scrape --force
 #### 3. **Analisi Dati**
 
 ```bash
-# Analizza tutti i dati disponibili (genera Excel + JSON)
+# Analizza tutti i dati disponibili (genera Excel + JSON + HTML)
 poetry run python cli.py analyze
 
 # Analizza solo una fonte
@@ -82,10 +82,10 @@ poetry run python cli.py analyze --top 20
 poetry run python cli.py analyze --output ./custom_output/
 ```
 
-**Output generati automaticamente:**
-- `fpedia_analysis.xlsx` + `fpedia_analysis.json`
-- `FSTATS_analysis.xlsx` + `FSTATS_analysis.json`
-- `unified_analysis.xlsx` + `unified_analysis.json` (con `--source all`)
+**Output generati automaticamente (3 formati):**
+- `fpedia_analysis.xlsx` / `.json` / `.html`
+- `FSTATS_analysis.xlsx` / `.json` / `.html`
+- `unified_analysis.xlsx` / `.json` / `.html` (con `--source all`)
 
 #### 4. **Ispezione Dati**
 
@@ -107,12 +107,15 @@ poetry run python cli.py inspect --source fstats --team Milan --limit 15
 poetry run python cli.py status
 ```
 
-#### 6. **Export JSON Automatico**
+#### 6. **Export Multi-Formato Automatico**
 
-🆕 **Novità**: Ogni comando di analisi genera automaticamente file JSON oltre agli Excel!
+🆕 **Novità**: Ogni comando di analisi genera automaticamente file in **3 formati**:
+- **Excel (.xlsx)** - Per analisi con fogli di calcolo
+- **JSON (.json)** - Per integrazione con applicazioni
+- **HTML (.html)** - Per visualizzazione nel browser
 
 ```bash
-# Tutti questi comandi generano sia .xlsx che .json
+# Tutti questi comandi generano .xlsx, .json e .html
 poetry run python cli.py analyze --source fpedia
 poetry run python cli.py analyze --source fstats
 poetry run python cli.py analyze --source all
@@ -140,12 +143,13 @@ poetry run python cli.py run
 }
 ```
 
-**Vantaggi dell'export JSON:**
-- 📊 **Integrazione facile** con altri tools e API
-- 🔍 **Metadata strutturati** per analisi avanzate
-- 🚀 **Performance migliori** per applicazioni web
-- 📱 **Mobile-friendly** per app e dashboard
-- 🔄 **Automatico** - nessun comando aggiuntivo necessario
+**Vantaggi dell'export multi-formato:**
+- 📊 **Excel**: Analisi tradizionale con formule e grafici
+- 🔍 **JSON**: Metadata strutturati e integrazione con API
+- 🌐 **HTML**: Visualizzazione web elegante e interattiva
+- 🚀 **Performance**: Formato ottimale per ogni uso
+- 📱 **Accessibilità**: Visualizzabile su qualsiasi dispositivo
+- 🔄 **Automatico**: Nessun comando aggiuntivo necessario
 
 ### 🎨 Funzionalità Avanzate
 
@@ -217,8 +221,8 @@ poetry run python cli.py -v run --source all --top 20
 |---------|-----------|-----------|
 | **Interface** | Script singolo | Comandi modulari |
 | **Progress** | tqdm basic | Rich animated |
-| **Output** | Solo Excel | Excel + JSON automatico |
-| **Export Formats** | .xlsx | .xlsx + .json con metadata |
+| **Output** | Solo Excel | Excel + JSON + HTML |
+| **Export Formats** | .xlsx | .xlsx + .json + .html |
 | **Unified Analysis** | Solo main.py | Anche in CLI |
 | **Config** | Hard-coded | YAML flessibile |
 | **Logging** | Loguru basic | Strutturato JSON |
@@ -243,6 +247,7 @@ Per utilizzare la nuova CLI, installa le dipendenze e usa `fantacalcio` invece d
 3. **Personalizza config YAML** per le tue esigenze
 4. **Usa filters con `inspect`** per esplorare i dati
 5. **Combina `--force-scrape`** con `--source` per aggiornamenti mirati
-6. **🆕 File JSON automatici** - ideali per integrazioni con dashboard e API
-7. **🆕 Dataset unificato** - usa `--source all` per combinare FPEDIA + FSTATS
-8. **🆕 Metadata JSON** - timestamp e info utili per tracking cronologico
+6. **🆕 File multi-formato** - Excel, JSON e HTML generati automaticamente
+7. **🆕 HTML styling** - Output web visualizzabili nel browser
+8. **🆕 Dataset unificato** - usa `--source all` per combinare FPEDIA + FSTATS
+9. **🆕 Metadata JSON** - timestamp e info utili per tracking cronologico

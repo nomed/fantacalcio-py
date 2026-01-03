@@ -33,6 +33,7 @@ import fuzzy_matcher
 import config
 import json
 from datetime import datetime
+from output_utils import save_analysis_results as _save_analysis_results
 
 
 console = Console()
@@ -255,14 +256,15 @@ def analyze(ctx, source, output, top):
                 col for col in output_columns if col in df_final_sorted.columns
             ]
 
-            # Save both Excel and JSON
-            excel_path, json_path = _save_analysis_results(
+            # Save Excel, JSON, and HTML
+            excel_path, json_path, html_path = _save_analysis_results(
                 df_final_sorted[final_columns], "fpedia_analysis", "fpedia"
             )
 
             progress.update(task, completed=True)
             rprint(f"✅ [green]FPEDIA analysis saved to {excel_path}[/green]")
             rprint(f"📄 [blue]JSON export saved to {json_path}[/blue]")
+            rprint(f"🌐 [cyan]HTML export saved to {html_path}[/cyan]")
 
             # Store for unified analysis
             df_fpedia_final = df_final.copy()
@@ -364,14 +366,15 @@ def analyze(ctx, source, output, top):
                 col for col in output_columns if col in df_final_sorted.columns
             ]
 
-            # Save both Excel and JSON
-            excel_path, json_path = _save_analysis_results(
+            # Save Excel, JSON, and HTML
+            excel_path, json_path, html_path = _save_analysis_results(
                 df_final_sorted[final_columns], "FSTATS_analysis", "fstats"
             )
 
             progress.update(task, completed=True)
             rprint(f"✅ [green]FSTATS analysis saved to {excel_path}[/green]")
             rprint(f"📄 [blue]JSON export saved to {json_path}[/blue]")
+            rprint(f"🌐 [cyan]HTML export saved to {html_path}[/cyan]")
 
             # Store for unified analysis
             df_fstats_final = df_final.copy()
@@ -397,13 +400,14 @@ def analyze(ctx, source, output, top):
                     df_unified_sorted = df_unified
 
                 # Save unified results
-                excel_path, json_path = _save_analysis_results(
+                excel_path, json_path, html_path = _save_analysis_results(
                     df_unified_sorted, "unified_analysis", "unified"
                 )
 
                 progress.update(task, completed=True)
                 rprint(f"✅ [green]Unified analysis saved to {excel_path}[/green]")
                 rprint(f"📄 [blue]JSON export saved to {json_path}[/blue]")
+                rprint(f"🌐 [cyan]HTML export saved to {html_path}[/cyan]")
 
                 # Show top unified players
                 _show_top_players(df_unified_sorted, "UNIFIED", top)
@@ -583,30 +587,6 @@ def status():
 
 
 
-def _save_analysis_results(df, base_name, source_name):
-    """Helper function to save analysis results in both Excel and JSON formats"""
-    import pandas as pd
-
-    # Excel output
-    excel_path = os.path.join(config.OUTPUT_DIR, f"{base_name}.xlsx")
-    df.to_excel(excel_path, index=False)
-
-    # JSON output
-    json_path = os.path.join(config.OUTPUT_DIR, f"{base_name}.json")
-    data = {
-        "metadata": {
-            "source": source_name,
-            "total_players": len(df),
-            "generated_at": pd.Timestamp.now().isoformat(),
-            "columns": list(df.columns)
-        },
-        "players": df.fillna("").to_dict("records")
-    }
-
-    with open(json_path, 'w', encoding='utf-8') as f:
-        json.dump(data, f, ensure_ascii=False, indent=2)
-
-    return excel_path, json_path
 
 
 def _merge_datasets_with_mapping(df_fpedia_final, df_fstats_final, mapping_file=fuzzy_matcher.OUTPUT_FILE):
