@@ -1,6 +1,8 @@
 """
 Shared HTML template for Fantacalcio analysis output
 """
+import pandas as pd
+
 
 def generate_html_output(df, source_name):
     """
@@ -13,8 +15,6 @@ def generate_html_output(df, source_name):
     Returns:
         str: Complete HTML page as a string
     """
-    import pandas as pd
-    
     html_content = df.to_html(index=False, classes='table table-striped table-hover', border=0)
     
     # Create a complete HTML page with styling
