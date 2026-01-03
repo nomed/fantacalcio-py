@@ -61,6 +61,8 @@ poetry.lock
 *.jsonl
 data/
 !data/.gitkeep
+!data/output/README.md
+!data/output/sample_output.html
 
 # Logs
 *.log
