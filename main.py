@@ -12,7 +12,7 @@ import config
 
 
 def save_analysis_results(df, base_name, source_name):
-    """Save analysis results in both Excel and JSON formats"""
+    """Save analysis results in Excel, JSON, and HTML formats"""
 
     # Excel output
     excel_path = os.path.join(config.OUTPUT_DIR, f"{base_name}.xlsx")
@@ -33,7 +33,95 @@ def save_analysis_results(df, base_name, source_name):
     with open(json_path, 'w', encoding='utf-8') as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
 
-    return excel_path, json_path
+    # HTML output
+    html_path = os.path.join(config.OUTPUT_DIR, f"{base_name}.html")
+    html_content = df.to_html(index=False, classes='table table-striped table-hover', border=0)
+    
+    # Create a complete HTML page with styling
+    full_html = f"""<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fantacalcio Analysis - {source_name.upper()}</title>
+    <style>
+        body {{
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }}
+        .container {{
+            max-width: 100%;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            overflow-x: auto;
+        }}
+        h1 {{
+            color: #333;
+            margin-top: 0;
+        }}
+        .metadata {{
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            border-left: 4px solid #007bff;
+        }}
+        .metadata p {{
+            margin: 5px 0;
+            color: #666;
+        }}
+        table {{
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }}
+        th {{
+            background-color: #007bff;
+            color: white;
+            padding: 12px 8px;
+            text-align: left;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }}
+        td {{
+            padding: 10px 8px;
+            border-bottom: 1px solid #dee2e6;
+        }}
+        tr:hover {{
+            background-color: #f8f9fa;
+        }}
+        tr:nth-child(even) {{
+            background-color: #fafafa;
+        }}
+        .numeric {{
+            text-align: right;
+        }}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏆 Fantacalcio Analysis - {source_name.upper()}</h1>
+        <div class="metadata">
+            <p><strong>Source:</strong> {source_name}</p>
+            <p><strong>Total Players:</strong> {len(df)}</p>
+            <p><strong>Generated:</strong> {pd.Timestamp.now().strftime('%Y-%m-%d %H:%M:%S')}</p>
+        </div>
+        {html_content}
+    </div>
+</body>
+</html>"""
+    
+    with open(html_path, 'w', encoding='utf-8') as f:
+        f.write(full_html)
+
+    return excel_path, json_path, html_path
 
 
 def merge_datasets_with_mapping(
@@ -193,8 +281,8 @@ def main():
         ]
         final_columns = [col for col in output_columns if col in df_final.columns]
 
-        # Save both Excel and JSON
-        excel_path, json_path = save_analysis_results(
+        # Save Excel, JSON, and HTML
+        excel_path, json_path, html_path = save_analysis_results(
             df_final[final_columns], "fpedia_analysis", "fpedia"
         )
 
@@ -202,6 +290,7 @@ def main():
 
         logger.info(f"FPEDIA analysis complete. Results saved to {excel_path}")
         logger.info(f"FPEDIA JSON export saved to {json_path}")
+        logger.info(f"FPEDIA HTML export saved to {html_path}")
     else:
         logger.warning("FPEDIA DataFrame is empty. Pipeline skipped.")
 
@@ -296,8 +385,8 @@ def main():
         ]
         final_columns = [col for col in output_columns if col in df_final.columns]
 
-        # Save both Excel and JSON
-        excel_path, json_path = save_analysis_results(
+        # Save Excel, JSON, and HTML
+        excel_path, json_path, html_path = save_analysis_results(
             df_final[final_columns], "FSTATS_analysis", "fstats"
         )
 
@@ -305,6 +394,7 @@ def main():
 
         logger.info(f"FSTATS analysis complete. Results saved to {excel_path}")
         logger.info(f"FSTATS JSON export saved to {json_path}")
+        logger.info(f"FSTATS HTML export saved to {html_path}")
     else:
         logger.warning("FSTATS DataFrame is empty. Pipeline skipped.")
 
@@ -314,12 +404,13 @@ def main():
         df_unified = merge_datasets_with_mapping(df_fpedia_final, df_fstats_final)
 
         if not df_unified.empty:
-            # Save both Excel and JSON
-            excel_path, json_path = save_analysis_results(
+            # Save Excel, JSON, and HTML
+            excel_path, json_path, html_path = save_analysis_results(
                 df_unified, "unified_analysis", "unified"
             )
             logger.info(f"Unified analysis complete. Results saved to {excel_path}")
             logger.info(f"Unified JSON export saved to {json_path}")
+            logger.info(f"Unified HTML export saved to {html_path}")
         else:
             logger.warning("Unified analysis resulted in empty DataFrame.")
 
